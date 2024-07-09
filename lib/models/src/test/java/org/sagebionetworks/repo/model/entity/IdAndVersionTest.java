@@ -28,6 +28,13 @@ public class IdAndVersionTest {
 	}
 	
 	@Test
+	public void testNegativeVersion() {
+		IdAndVersion one = new IdAndVersionBuilder().setId(123L).setVersion(-1L).build();
+		assertEquals(new Long(123), one.getId());
+		assertFalse(one.getVersion().isPresent());
+	}
+	
+	@Test
 	public void testNullId() {
 		assertThrows(IllegalArgumentException.class, () -> {			
 			new IdAndVersionBuilder().setId(null).setVersion(456L).build();

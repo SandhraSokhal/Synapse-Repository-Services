@@ -20,6 +20,7 @@ import org.sagebionetworks.repo.manager.table.metadata.DefaultColumnModel;
 import org.sagebionetworks.repo.manager.table.metadata.DefaultColumnModelMapper;
 import org.sagebionetworks.repo.manager.table.metadata.MetadataIndexProvider;
 import org.sagebionetworks.repo.manager.table.metadata.MetadataIndexProviderFactory;
+import org.sagebionetworks.repo.manager.trash.EntityInTrashCanException;
 import org.sagebionetworks.repo.model.ACCESS_TYPE;
 import org.sagebionetworks.repo.model.ConflictingUpdateException;
 import org.sagebionetworks.repo.model.DatastoreException;
@@ -188,11 +189,9 @@ public class TableManagerSupportImpl implements TableManagerSupport {
 				return setTableToProcessingAndTriggerUpdate(idAndVersion);
 			}
 
+		} catch (EntityInTrashCanException e) {
+			throw new NotFoundException("Entity " + idAndVersion + " is either in trashcan or deleted");
 		} catch (NotFoundException e) {
-			// make sure the table exists
-			if (!isTableAvailable(idAndVersion)) {
-				throw new NotFoundException("Table " + idAndVersion + " not found");
-			}
 			return setTableToProcessingAndTriggerUpdate(idAndVersion);
 		}
 	}
@@ -548,6 +547,21 @@ public class TableManagerSupportImpl implements TableManagerSupport {
 	@Override
 	public TableType getTableType(IdAndVersion idAndVersion) {
 		ValidateArgument.required(idAndVersion, "idAndVersion");
+		boolean isNodeAvailable = nodeDao.isNodeAvailable(idAndVersion.getId().toString());
+
+		if (!isNodeAvailable) {
+			tableStatusDAO.deleteTableStatusForAllVersions(idAndVersion);
+			throw new EntityInTrashCanException(String.format("Entity %s is in trashcan", idAndVersion));
+		}
+
+		if (idAndVersion.getVersion().isPresent()) {
+			boolean isNodeVersionAvailable = nodeDao.doesNodeRevisionExist(idAndVersion.getId().toString(), idAndVersion.getVersion().get());
+			if (!isNodeVersionAvailable) {
+				tableStatusDAO.deleteTableStatus(idAndVersion);
+				throw new EntityInTrashCanException(String.format("Entity %s with %s version does not exists", idAndVersion.getId(), idAndVersion.getVersion().get()));
+			}
+		}
+
 		EntityType entityType = nodeDao.getNodeTypeById(idAndVersion.getId().toString());
 		return TableType.lookupByEntityType(entityType).orElseThrow(() -> new IllegalArgumentException(String.format("%s is not a table or view", idAndVersion.toString())));
 	}

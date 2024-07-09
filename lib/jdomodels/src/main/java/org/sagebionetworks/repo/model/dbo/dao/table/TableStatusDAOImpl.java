@@ -91,6 +91,9 @@ public class TableStatusDAOImpl implements TableStatusDAO {
 	private static final String SQL_DELETE_TABLE_STATUS = "DELETE FROM " + TABLE_STATUS + " WHERE "
 			+ COL_TABLE_STATUS_ID + " = ? AND " + COL_TABLE_STATUS_VERSION + " = ?";
 
+	private static final String SQL_DELETE_TABLE_STATUS_FOR_ALL_VERSIONS = "DELETE FROM " + TABLE_STATUS + " WHERE "
+			+ COL_TABLE_STATUS_ID + " = ?";
+
 	TableMapping<DBOTableStatus> tableMapping = new DBOTableStatus().getTableMapping();
 
 	private DBOBasicDao basicDao;
@@ -273,6 +276,11 @@ public class TableStatusDAOImpl implements TableStatusDAO {
 	public void deleteTableStatus(IdAndVersion idAndVersion) {
 		long version = validateAndGetVersion(idAndVersion);
 		jdbcTemplate.update(SQL_DELETE_TABLE_STATUS, idAndVersion.getId(), version);
+	}
+
+	@Override
+	public void deleteTableStatusForAllVersions(IdAndVersion idAndVersion) {
+		jdbcTemplate.update(SQL_DELETE_TABLE_STATUS_FOR_ALL_VERSIONS, idAndVersion.getId());
 	}
 
 	/**

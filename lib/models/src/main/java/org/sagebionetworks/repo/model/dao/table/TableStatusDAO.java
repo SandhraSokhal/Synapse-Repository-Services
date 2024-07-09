@@ -116,6 +116,12 @@ public interface TableStatusDAO {
 	public void deleteTableStatus(IdAndVersion tableId);
 
 	/**
+	 * Delete the table status for all the versions of a table.
+	 * @param idAndVersion
+	 */
+	void deleteTableStatusForAllVersions(IdAndVersion idAndVersion);
+
+	/**
 	 * Remove all table state. This should not be called during normal operations.
 	 * 
 	 */

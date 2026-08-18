@@ -1189,7 +1189,7 @@
 		<schema-to-pojo.version>0.6.13</schema-to-pojo.version>
 		<com.amazonaws.version>1.12.768</com.amazonaws.version>
 		<findbugs-maven-plugin.version>2.5.2</findbugs-maven-plugin.version>
-		<org.apache.httpcomponents.version>4.5.13</org.apache.httpcomponents.version>
+		<org.apache.httpcomponents.version>4.5.14</org.apache.httpcomponents.version>
 		<org.apache.pivot.version>2.0.1</org.apache.pivot.version>
 		<log4j.version>2.26.1</log4j.version>
 		<commonslogging.version>1.3.6</commonslogging.version>

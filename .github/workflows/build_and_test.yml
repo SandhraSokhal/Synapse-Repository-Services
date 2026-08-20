@@ -57,9 +57,9 @@ jobs:
             alpha_only_trunc_repo_name=$(echo "${GITHUB_REPOSITORY_OWNER//[^[:alnum:]]/}" | tr '[:upper:]' '[:lower:]' | cut -c1-7)
             USER=$alpha_only_trunc_repo_name
           fi
-          # give Dependabot its own stack so its builds never collide with another build                                                                                                   
-          if [[ "${{ github.event.pull_request.user.login }}" == "dependabot[bot]" ]]; then                                                                                                         
-            USER=${USER}bot                                                                                                                                                                        
+          # give Dependabot its own stack so its builds never collide with another build
+          if [[ "${{ github.event.pull_request.user.login }}" == "dependabot[bot]" ]]; then
+            USER=${USER}bot
           fi
           echo "USER=$USER" >> $GITHUB_OUTPUT
           # capture the current branch as an environment variable

@@ -1174,7 +1174,7 @@
 			sources -->
 		<downloadSources>true</downloadSources>
 		<gwtVersion>2.8.2</gwtVersion>
-		<guavaVersion>33.6.0-jre</guavaVersion>
+		<guavaVersion>33.7.0-jre</guavaVersion>
 		<reflectionsVersion>0.10.2</reflectionsVersion>
 		<!-- Upgraded to Spring 6.1.x and Java 21 LTS for Spring AI Bedrock AgentCore support.
 			 Spring 6 requires Java 17+ and jakarta.* namespace (migrated from javax.*).
